@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-    // tabs start
+    // Tabs
     const tabs = document.querySelectorAll('.tabheader__item'),
           tabsContent = document.querySelectorAll('.tabcontent'),
           tabsParent = document.querySelector('.tabheader__items');
@@ -36,9 +36,9 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-    // Tabs end
+    // Tabs
 
-    // Timer start
+    // Timer
     const deadline = '2020-05-19';
 
     function getTimeRemaining(endtime) {
@@ -90,5 +90,54 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     setClock('.timer', deadline);
-    // Timer end
+    // Timer
+
+    // start of Modal section
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+          modal = document.querySelector('.modal'),
+          modalCloseBtn = document.querySelector('[data-close]');
+
+    function openModal() {
+        // in comments another way, use the same at close section too
+        // modal.classList.add('show');
+        // modal.classList.remove('hide');
+        modal.classList.toggle('show');
+        document.body.style.overflow = 'hidden';
+        clearInterval(modalTimerId);
+    }
+
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', openModal);
+    });
+
+    function closeModal() {
+        modal.classList.toggle('show');
+        document.body.style.overflow = '';
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e) => {
+        if(e.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape' && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
+
+    const modalTimerId = setTimeout(openModal, 50000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
+    // End of modal section
 });
