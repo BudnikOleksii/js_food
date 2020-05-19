@@ -1,11 +1,14 @@
+import {getResource} from '../services/services';
+
 function cards() {
     class MenuCard {
-        constructor(src, alt, title, descr, price, parentSelector) {
+        constructor(src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
             this.alt = alt;
             this.title = title;
             this.descr = descr;
             this.price = price;
+            this.classes = classes;
             this.parent = document.querySelector(parentSelector);
             this.transfer = 27;
             this.changeToUAH();
@@ -17,6 +20,14 @@ function cards() {
 
         render() {
             const element = document.createElement('div');
+
+            if (this.classes.length === 0) {
+                this.classes = "menu__item";
+                element.classList.add(this.classes);
+            } else {
+                this.classes.forEach(className => element.classList.add(className));
+            }
+            
             element.innerHTML = `
                 <div class="menu__item">
                     <img src=${this.src} alt=${this.alt}>
@@ -33,17 +44,6 @@ function cards() {
         }
     }
 
-    const getResource = async (url) => {
-        const res = await fetch(url);
-
-        // cause catch doesn't show error when when 404 or other statuses
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        }
-            
-        return await res.json();
-    };
-
     getResource('http://localhost:3000/menu')
         .then(data => {
             data.forEach(({img, altimg, title, descr, price}) => {
@@ -52,4 +52,4 @@ function cards() {
         });
 }
 
-module.exports = cards;
+export default cards;
